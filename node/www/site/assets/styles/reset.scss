@@ -1,0 +1,70 @@
+@charset "utf-8";
+
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
+
+// Set your colors
+$primary: #8892BF;
+$primary-invert: findColorInvert($primary);
+$twitter: #4099FF;
+$twitter-invert: findColorInvert($twitter);
+
+// Setup $colors to use as bulma classes (e.g. 'is-twitter')
+$colors: ("white": ($white, $black),
+  "black": ($black, $white),
+  "light": ($light, $light-invert),
+  "dark": ($dark, $dark-invert),
+  "primary": ($primary, $primary-invert),
+  "info": ($info, $info-invert),
+  "success": ($success, $success-invert),
+  "warning": ($warning, $warning-invert),
+  "danger": ($danger, $danger-invert),
+  "twitter": ($twitter, $twitter-invert));
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+
+// Set your container max-width
+@media screen and (min-width: 1216px) {
+  .container {
+    max-width: 960px !important;
+  }
+}
+
+.margin-top-xs {
+  margin-top: 5px;
+}
+
+.margin-top-sm {
+  margin-top: 10px;
+}
+
+.margin-top-md {
+  margin-top: 15px;
+}
+
+.margin-top-lg {
+  margin-top: 30px;
+}
+
+.margin-bottom-xs {
+  margin-bottom: 5px;
+}
+
+.margin-bottom-sm {
+  margin-bottom: 10px;
+}
+
+.margin-bottom-md {
+  margin-bottom: 15px;
+}
+
+.margin-bottom-lg {
+  margin-bottom: 30px;
+}

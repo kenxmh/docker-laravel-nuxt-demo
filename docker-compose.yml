@@ -1,0 +1,97 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:${NGINX_VERSION}
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+      - "3048:3048"
+      - "8080:8080"
+    privileged: true
+    volumes:
+      - ${PHP_APP_FROM}:${PHP_APP_TO}:rw
+      - ${NODE_APP_FROM}:${NODE_APP_TO}:rw
+      - ${NGINX_SSL_CERTIFICATE_DIR}:/etc/nginx/ssl:rw
+      - ${NGINX_CONFD_DIR}:/etc/nginx/conf.d/:rw
+      - ${NGINX_CONF_FILE}:/etc/nginx/nginx.conf:ro
+      - ${NGINX_FASTCGI_PHP_CONF}:/etc/nginx/fastcgi-php.conf:ro
+      - ${NGINX_FASTCGI_PARAMS}:/etc/nginx/fastcgi_params:ro
+      - ${NGINX_LOG_DIR}:/var/log/nginx/:rw
+    depends_on:
+      - php
+      - node
+    environment:
+      TZ: "$TZ"
+    restart: always
+    networks:
+      - app
+      
+  php:
+    build:
+      context: ./php
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+        CONTAINER_PACKAGE_URL: ${CONTAINER_PACKAGE_URL}
+        PHP_EXTENSIONS: ${PHP_EXTENSIONS}
+        TZ: "$TZ"
+    privileged: true
+    container_name: php
+    volumes:
+      - ${PHP_APP_FROM}:${PHP_APP_TO}:rw
+      - ${PHP_PHP_CONF_FILE}:/usr/local/etc/php/php.ini:ro
+      - ${PHP_FPM_CONF_FILE}:/usr/local/etc/php-fpm.d/www.conf:rw
+      - ${PHP_LOG_DIR}:/var/log/php
+      - ${PHP_COMPOSER_DATA}:/tmp/composer
+    restart: always
+    # cap_add:
+    #   - ALL
+    networks:
+      - app
+
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    container_name: mysql
+    ports:
+      - "${MYSQL_HOST_PORT}:3306"
+    volumes:
+      - ${MYSQL_CONF_FILE}:/etc/mysql/conf.d/mysql.cnf:ro
+      - ${MYSQL_DATA}:/var/lib/mysql/:rw
+    restart: always
+    networks:
+      - app
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      TZ: "$TZ"
+
+  redis:
+   image: redis:${REDIS_VERSION}
+   container_name: redis
+   ports:
+     - "${REDIS_HOST_PORT}:6379"
+   volumes:
+     - ${REDIS_CONF_FILE}:/etc/redis.conf:ro
+     - ${REDIS_DATA}:/data/:rw
+   restart: always
+   entrypoint: ["redis-server", "/etc/redis.conf"]
+   environment:
+     TZ: "$TZ"
+   networks:
+     - app
+
+  node:
+    image: node:${NODE_VERSION}
+    container_name: node
+    working_dir: ${NODE_APP_TO}
+    stdin_open: true # -i 以交互模式运行容器
+    tty: true  # -t 为容器重新分配一个伪输入终端
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${NODE_APP_FROM}:${NODE_APP_TO}:rw
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
