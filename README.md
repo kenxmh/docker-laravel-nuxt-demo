@@ -1,9 +1,17 @@
-# docker-laravel-nuxt-demo
+# docker-laravel-nuxt
 
+>这只是一个前后端分离的尝试，运行于docker环境
+>前端使用nuxt，laravel只做api提供数据，后台管理使用element-admin
+>该项目是以一个简单的blog为例
 
->这是一个前后端分离的尝试，适合喜欢折磨自己的人
-前端使用nuxt，laravel只做api提供数据，后台管理使用element-admin
-该项目是以一个简单的blog为例
+## 简介：
+* 前端
+nuxt + buefy 的简单博客
+* api
+Laravel 5.8 + JWT
+* admin
+基于vue-elememt-admin的修改
+功能仅包括：RBAC的权限管理和文章管理
 
 ## 如何使用：
 
@@ -53,6 +61,11 @@ npm config set registry https://registry.npm.taobao.org
 npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 npm rebuild node-sass
 npm install
+
+// 开发
+npm run dev
+
+// 部署
 npm run build:prod
 ```
 
@@ -64,5 +77,11 @@ npm config set registry https://registry.npm.taobao.org
 npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 npm rebuild node-sass
 npm install
-npm run build:prod
+
+// 开发
+npm run dev
+
+// 部署
+npm run build
+npm run start
 ```

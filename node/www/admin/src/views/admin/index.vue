@@ -144,7 +144,8 @@ const defaultAdmin = {
   username: "",
   password: "",
   realname: "",
-  email: ""
+  email: "",
+  status: 0
 };
 
 export default {

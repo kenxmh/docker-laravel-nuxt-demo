@@ -97,7 +97,7 @@ class UserController extends Controller
     {
         $request->validate([
             'username' => 'required|string|min:3|max:255|unique:admin_user',
-            'realname' => 'string|max:255',
+            'realname' => 'required|string|max:255',
             'email'    => 'required|string|email|max:255|unique:admin_user',
             'password' => 'required|string|min:6',
         ]);
@@ -125,7 +125,8 @@ class UserController extends Controller
             DB::rollBack();
             return response()->json([
                 'error_code' => 2,
-                'message'    => '未知错误，操作失败',
+                // 'message'    => '未知错误，操作失败',
+                'message'    => $e->getMessage(),
             ], 400);
         }
 
@@ -161,9 +162,8 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'realname' => 'string|max:255',
-            'email'    => 'required|string|email|max:255',
-            'password' => 'string|min:6',
+            'realname' => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255'
         ]);
         $user = User::find($request->route('id'));
         if (empty($user->id)) {
@@ -233,7 +233,7 @@ class UserController extends Controller
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'password' => 'string|min:6',
+            'password' => 'required|string|min:6',
         ]);
         $user = User::find($request->route('id'));
         if (empty($user->id)) {

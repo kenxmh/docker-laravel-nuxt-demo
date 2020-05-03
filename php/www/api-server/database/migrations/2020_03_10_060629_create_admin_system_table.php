@@ -17,8 +17,8 @@ class CreateAdminSystemTable extends Migration
             $table->increments('id')->unsigned();
             $table->string('username', 32)->unique();
             $table->string('password', 128);
-            $table->string('mobile', 11)->default('')->unique();
-            $table->string('email', 32)->default('')->unique();
+            $table->string('mobile', 11)->default('');
+            $table->string('email', 32)->default('');
             $table->string('realname', 32)->default('');
             $table->tinyInteger('status')->default(0)->index();
             $table->timestamps();
