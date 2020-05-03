@@ -19,6 +19,9 @@
       <el-table-column align="center" label="key" prop="key" sortable>
         <template slot-scope="scope">{{ scope.row.key }}</template>
       </el-table-column>
+      <el-table-column align="center" label="color" prop="color" sortable>
+        <template slot-scope="scope">{{ scope.row.color }}</template>
+      </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleEdit(scope)">修改信息</el-button>
@@ -34,6 +37,9 @@
         </el-form-item>
         <el-form-item label="name">
           <el-input v-model="category.key" placeholder="key" />
+        </el-form-item>
+        <el-form-item label="color">
+          <el-input v-model="category.color" placeholder="color" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -57,6 +63,7 @@ const defaultCategory = {
   id: "",
   name: "",
   key:"",
+  color: "",
 };
 
 export default {

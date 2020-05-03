@@ -18,7 +18,6 @@ class Category extends JsonResource
             'key'   => $this->key,
             'name'  => $this->name,
             'color' => $this->color,
-            'style' => json_decode($this->style, true),
             'count' => $this->count,
         ];
     }

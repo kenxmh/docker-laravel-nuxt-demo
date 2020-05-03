@@ -21,15 +21,15 @@ class AccessController extends Controller
         $finalArr = [];
         foreach ($list as $row) {
             if (empty($finalArr[$row['pid']])) {
-                $finalArr[$row['id']] = $row;
-                $finalArr[$row['id']]['children']   = [];
+                $finalArr[$row['id']]             = $row;
+                $finalArr[$row['id']]['children'] = [];
             } else {
                 // dump($finalArr[$row['group']]['children']);exit;
                 array_push($finalArr[$row['pid']]['children'], $row);
 
             }
         }
-        
+
         $finalArr = array_values($finalArr);
         return response()->json($finalArr, 200);
     }

@@ -4,14 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
-
-
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-
 
 class TokenMiddleware extends BaseMiddleware
 {
@@ -30,11 +27,11 @@ class TokenMiddleware extends BaseMiddleware
             $token = $this->auth->parseToken();
             if ($this->auth->parseToken()->getClaim('role') != $role) {
                 return response()->json([
-                    'error_code'          => 40104,
-                    'message' => 'Token unmatched, please check.',
+                    'error_code' => 1,
+                    'message'    => 'Token unmatched, please check.',
                 ], 401);
             }
-            
+
             return $next($request);
 
         } catch (TokenExpiredException $e) {
@@ -46,21 +43,21 @@ class TokenMiddleware extends BaseMiddleware
             } catch (JWTException $exception) {
                 // refresh 也过期，重新登录
                 return response()->json([
-                    'error_code'          => 40103,
-                    'message' => 'Token invalid, please re-login.',
+                    'error_code' => 2,
+                    'message'    => 'Token invalid, please re-login.',
                 ], 401);
             }
         } catch (TokenInvalidException $e) {
             // token格式错误，非本系统生成的token
             return response()->json([
-                'error_code'          => 40102,
-                'message' => 'Token invalid, please re-login.',
+                'error_code' => 3,
+                'message'    => 'Token invalid, please re-login.',
             ], 401);
         } catch (UnauthorizedHttpException $e) {
             // 没有token
             return response()->json([
-                'error_code'          => 40100,
-                'message' => 'Token is required.',
+                'error_code' => 3,
+                'message'    => 'Token is required.',
             ], 401);
         }
 

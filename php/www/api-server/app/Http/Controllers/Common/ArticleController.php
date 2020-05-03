@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Common;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Category;
-use Illuminate\Http\Request;
-use Parsedown;
 use App\Services\HashService;
-use Illuminate\Support\Facades\Redis; // use Redis; 会导致命名空间重复，集成的Redis 和 predis 
+use Illuminate\Http\Request;
+// use Redis; 会导致命名空间重复，集成的Redis 和 predis
 
 class ArticleController extends Controller
 {
@@ -38,7 +37,7 @@ class ArticleController extends Controller
             }
             $list = $category->articles()
                 ->with(['categories'])
-                // ->select("article.id", "title", "views", "comments", "created_at", "updated_at")
+            // ->select("article.id", "title", "views", "comments", "created_at", "updated_at")
                 ->orderBy('article.sort', 'desc')
                 ->orderBy('article.id', 'desc')
                 ->paginate(10, ['*'], 'page', $page);
@@ -85,7 +84,7 @@ class ArticleController extends Controller
      */
     public function show($uuid)
     {
-        $id = HashService::getObjectId($uuid);
+        $id      = HashService::getObjectId($uuid);
         $article = Article::where('id', $id)->first();
         if (empty($article->id)) {
             return response()->json([

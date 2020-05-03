@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreRequest;
-use App\Http\Requests\Admin\UpdateRequest;
 use App\Models\Admin\Role;
 use App\Models\Admin\User;
 use Illuminate\Database\QueryException;
@@ -47,7 +45,7 @@ class UserController extends Controller
      */
     public function user()
     {
-        $user = auth()->guard('admin')->user()->toArray();
+        $user          = auth()->guard('admin')->user()->toArray();
         $user['roles'] = Role::leftJoin('admin_user_role', 'admin_role.id', '=', 'admin_user_role.role_id')
             ->where(['admin_user_role.admin_id' => $user['id']])
             ->pluck('admin_role.name');

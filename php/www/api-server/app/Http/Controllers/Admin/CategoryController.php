@@ -31,12 +31,14 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|min:2|max:32|unique:category',
-            'key'  => 'required|string|min:2|max:32|unique:category',
+            'name'  => 'required|string|min:2|max:32|unique:category',
+            'key'   => 'required|string|min:2|max:32|unique:category',
+            'color' => 'required|string',
         ]);
-        $category       = new Category;
-        $category->name = $request->name;
-        $category->key  = $request->key;
+        $category        = new Category;
+        $category->name  = $request->name;
+        $category->key   = $request->key;
+        $category->color = $request->color;
         $category->save();
         $category->refresh();
         return response()->json($category, 201);
@@ -63,7 +65,9 @@ class CategoryController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|min:2|max:255',
+            'name'  => 'required|string|min:2|max:32',
+            'key'   => 'required|string|min:2|max:32',
+            'color' => 'required|string|min:2|max:6',
         ]);
 
         $category = Category::find($request->route('id'));
@@ -92,7 +96,7 @@ class CategoryController extends Controller
         }
 
         $category->name = $request->name;
-        $category->key = $request->key;
+        $category->key  = $request->key;
         $category->save();
         return response()->json([], 204);
     }

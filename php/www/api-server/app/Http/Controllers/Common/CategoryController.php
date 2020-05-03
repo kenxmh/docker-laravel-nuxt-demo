@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Common;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
@@ -21,12 +21,12 @@ class CategoryController extends Controller
         $countArr = DB::table('article_category')
             ->select('category_id', DB::raw('count(*) as count'))
             ->groupBy('category_id')->get()->toArray();
-            
+
         $idCountArr = [];
-        foreach($countArr as $item) {
+        foreach ($countArr as $item) {
             $idCountArr[$item->category_id] = $item->count;
         }
-        
+
         $list = Category::all()->toArray();
         foreach ($list as &$row) {
             $row['count'] = $idCountArr[$row['id']] ?? 0;

@@ -28,7 +28,7 @@ class AdminMiddleware
             $accessObj = DB::table('admin_access')->select('id')->where(['action' => $action])->first();
             if (empty($accessObj->id)) {
                 return response()->json([
-                    'error_code' => 40301,
+                    'error_code' => 1,
                     'message'    => 'Access denial.',
                 ], 403);
             }
@@ -39,16 +39,16 @@ class AdminMiddleware
                 ])->limit(1)->count();
             if (!$hasPermission) {
                 return response()->json([
-                    'error_code' => 40302,
+                    'error_code' => 2,
                     'message'    => 'Access denial.',
                 ], 403);
             }
         } catch (UserNotDefinedException $e) {
             // 没有token
             return response()->json([
-                'error_code' => 40104,
+                'error_code' => 3,
                 'message'    => 'User not found.',
-            ], 401);
+            ], 403);
         }
         return $next($request);
     }

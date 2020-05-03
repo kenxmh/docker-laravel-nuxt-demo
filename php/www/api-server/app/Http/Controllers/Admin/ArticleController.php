@@ -7,8 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Vinkla\Hashids\Facades\Hashids;
-use App\Services\HashidService;
 
 class ArticleController extends Controller
 {
@@ -30,8 +28,8 @@ class ArticleController extends Controller
         $page  = $request->page ?? 1;
         $prop  = $request->prop ?? 'id';
         $order = $request->order ?? 'desc';
-        $list = Article::with('categories')->orderBy($prop, $order)->paginate(10, ['*'], 'page', $page);
-        
+        $list  = Article::with('categories')->orderBy($prop, $order)->paginate(10, ['*'], 'page', $page);
+
         $list->withPath('');
         return response()->json($list, 200);
     }
@@ -76,10 +74,10 @@ class ArticleController extends Controller
                 'message'    => '部分数据不存在',
             ], 404);
         }
-        
+
         $categories = $request->categories;
         // sort($categories);
-        
+
         DB::beginTransaction();
         try {
             $article        = new Article;

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Services\ImageService;
+use Illuminate\Http\Request;
 
 class ImageController extends Controller
 {
@@ -37,13 +37,13 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        $file = $request->file('image');
+        $file       = $request->file('image');
         $objectName = date('Ymd') . '/' . date('His') . mt_rand(0, 99);
         $result     = ImageService::uploadImage('ARTICLE_IMAGE', $objectName, $file->path());
-        
+
         if ($result) {
             return response()->json([
-                'url' => ImageService::getUrl('ARTICLE_IMAGE', $objectName)
+                'url' => ImageService::getUrl('ARTICLE_IMAGE', $objectName),
             ], 201);
         } else {
             return response()->json([

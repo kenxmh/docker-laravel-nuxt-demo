@@ -42,7 +42,7 @@ class RoleController extends Controller
             'name'     => 'required|string|min:2|max:255|unique:admin_role',
             'accesses' => 'array',
         ]);
-        
+
         // 检查传入的accesses 里面ID是否存在
         $count = DB::table('admin_access')->whereIn('id', $request->accesses)->count();
         if ($count != count($request->accesses)) {

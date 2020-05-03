@@ -3,8 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Vinkla\Hashids\Facades\Hashids;
 use Parsedown;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Article extends JsonResource
 {
@@ -25,8 +25,8 @@ class Article extends JsonResource
             'views'      => $this->views,
             'comments'   => $this->comments,
             'sort'       => $this->sort,
-            'created_at' => (string)$this->created_at,
-            'updated_at' => (string)$this->updated_at,
+            'created_at' => (string) $this->created_at,
+            'updated_at' => (string) $this->updated_at,
             'categories' => \App\Http\Resources\Category::collection($this->categories),
         ];
     }

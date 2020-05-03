@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Common;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use Illuminate\Http\Request;
 
 class StatController extends Controller
 {
@@ -18,7 +18,7 @@ class StatController extends Controller
     {
         $count = Article::count();
         return response()->json([
-            'total_article' => $count ?? 0
+            'total_article' => $count ?? 0,
         ], 200);
     }
 

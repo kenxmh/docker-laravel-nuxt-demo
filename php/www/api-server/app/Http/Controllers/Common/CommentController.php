@@ -22,7 +22,7 @@ class CommentController extends Controller
      */
     public function index(Request $request)
     {
-        $page     = $request->page ?? 1;
+        $page = $request->page ?? 1;
 
         $article = Article::where('id', Hashids::decode($request->uuid))->first();
         if (empty($article->id)) {
@@ -34,9 +34,9 @@ class CommentController extends Controller
 
         $list = Comment::where('article_id', $article->id)
             ->paginate(10, ['*'], 'page', $page);
-            // ->offset(10*($page-1))
-            // ->limit(10)
-            // ->get();
+        // ->offset(10*($page-1))
+        // ->limit(10)
+        // ->get();
         $list->withPath('');
         return \App\Http\Resources\Comment::collection($list);
     }
@@ -86,7 +86,7 @@ class CommentController extends Controller
                 $article->email = $request->email;
             }
             $comment->content = htmlspecialchars($request->content);
-            $comment->ip = $request->ip();
+            $comment->ip      = $request->ip();
             $comment->save();
 
             $article->comments += 1;
