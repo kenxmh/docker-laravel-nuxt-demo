@@ -19,14 +19,14 @@ class CreateArticleSystemTable extends Migration
             $table->text('body')->comment('markdown格式文本');
             $table->integer('views')->default(0)->unsigned()->comment('阅读量');
             $table->integer('comments')->default(0)->unsigned()->comment('评论数');
-            $table->integer('sort')->default(0)->comment('排序值')->index('idx_sort');
+            $table->integer('sort')->default(0)->comment('排序值')->index();
             $table->timestamps();
         });
 
         Schema::create('category', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name', 32);
-            $table->string('key', 32)->index('idx_key');
+            $table->string('key', 32)->unique();
             $table->string('color', 6);
             $table->integer('sort')->default(0)->comment('排序');
             $table->timestamps();
@@ -34,13 +34,13 @@ class CreateArticleSystemTable extends Migration
 
         Schema::create('article_category', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->integer('article_id')->unsigned()->index('idx_article_id');
-            $table->integer('category_id')->unsigned()->index('idx_category_id');
+            $table->integer('article_id')->unsigned()->index();
+            $table->integer('category_id')->unsigned()->index();
         });
 
         Schema::create('article_comment', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->integer('article_id')->unsigned()->index('idx_article_id');
+            $table->integer('article_id')->unsigned()->index();
             $table->integer('is_author')->default(0);
             $table->string('nickname', 32);
             $table->string('email', 32)->default('');

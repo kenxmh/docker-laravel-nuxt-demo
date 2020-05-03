@@ -47,4 +47,22 @@ php artisan db:seed
 
 ### 第三步：配置 Element-Admin
 
+#### 安装依赖
+```
+npm config set registry https://registry.npm.taobao.org
+npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+npm rebuild node-sass
+npm install
+npm run build:prod
+```
+
 ### 第四步：配置 Nuxt
+
+#### 安装依赖
+```
+npm config set registry https://registry.npm.taobao.org
+npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
+npm rebuild node-sass
+npm install
+npm run build:prod
+```

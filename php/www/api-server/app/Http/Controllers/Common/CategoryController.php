@@ -29,7 +29,6 @@ class CategoryController extends Controller
         
         $list = Category::all()->toArray();
         foreach ($list as &$row) {
-            $row['style'] = json_decode($row['style'], true);
             $row['count'] = $idCountArr[$row['id']] ?? 0;
         }
         return response()->json($list, 200);

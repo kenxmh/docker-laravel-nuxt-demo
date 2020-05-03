@@ -31,10 +31,12 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|min:2|max:255|unique:category',
+            'name' => 'required|string|min:2|max:32|unique:category',
+            'key'  => 'required|string|min:2|max:32|unique:category',
         ]);
         $category       = new Category;
         $category->name = $request->name;
+        $category->key  = $request->key;
         $category->save();
         $category->refresh();
         return response()->json($category, 201);
@@ -81,7 +83,16 @@ class CategoryController extends Controller
             ], 406);
         }
 
+        $has = Category::where('key', $request->key)->where('id', '!=', $request->id)->count();
+        if ($has > 0) {
+            return response()->json([
+                "error_code" => 3,
+                "message"    => 'key已使用',
+            ], 406);
+        }
+
         $category->name = $request->name;
+        $category->key = $request->key;
         $category->save();
         return response()->json([], 204);
     }

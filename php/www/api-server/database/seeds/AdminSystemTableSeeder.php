@@ -54,13 +54,24 @@ class AdminSystemTableSeeder extends Seeder
                 'name'       => '角色管理',
                 'group'      => 'Role',
                 'controller' => 'Admin\\RoleController',
-                'action'     => $baseAction,
+                'action'     => array_merge($baseAction, [
+                    ['action' => 'getAccesses', 'action_name' => '获取角色的路由规则'],
+                ])
             ],
             [
                 'name'       => '路由管理',
                 'group'      => 'Access',
                 'controller' => 'Admin\\AccessController',
                 'action'     => $baseAction,
+            ],
+            [
+                'name'       => '图片',
+                'group'      => 'Image',
+                'controller' => 'Admin\\ImageController',
+                'action'     =>  [
+                    ['action' => '', 'action_name' => ''],
+                    ['action' => 'store', 'action_name' => '上传图片'],
+                ]
             ],
             [
                 'name'       => '文章管理',

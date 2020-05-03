@@ -20,7 +20,7 @@ class CreateAdminSystemTable extends Migration
             $table->string('mobile', 11)->default('')->unique();
             $table->string('email', 32)->default('')->unique();
             $table->string('realname', 32)->default('');
-            $table->tinyInteger('status')->default(0)->index('idx_status');
+            $table->tinyInteger('status')->default(0)->index();
             $table->timestamps();
         });
 
@@ -32,22 +32,22 @@ class CreateAdminSystemTable extends Migration
 
         Schema::create('admin_access', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->integer('pid')->default(0)->index('idx_pid');
+            $table->integer('pid')->default(0)->index();
             $table->string('name', 32);
-            $table->string('action')->default('')->index('idx_action');
+            $table->string('action')->default('')->index();
             $table->timestamps();
         });
 
         Schema::create('admin_user_role', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->integer('admin_id')->unsigned()->index('idx_admin_id');
-            $table->integer('role_id')->unsigned()->index('idx_role_id');
+            $table->integer('admin_id')->unsigned()->index();
+            $table->integer('role_id')->unsigned()->index();
         });
 
         Schema::create('admin_role_access', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->integer('role_id')->unsigned()->index('idx_role_id');
-            $table->integer('access_id')->unsigned()->index('idx_access_id');
+            $table->integer('role_id')->unsigned()->index();
+            $table->integer('access_id')->unsigned()->index();
         });
     }
 

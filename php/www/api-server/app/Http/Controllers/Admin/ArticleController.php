@@ -64,6 +64,7 @@ class ArticleController extends Controller
         $request->validate([
             'title'      => 'required|string|min:4',
             'body'       => 'required|string|min:5',
+            'sort'       => 'required|integer|min:-99999|max:99999',
             'categories' => 'required|array',
         ]);
 
@@ -77,13 +78,14 @@ class ArticleController extends Controller
         }
         
         $categories = $request->categories;
-        sort($categories);
+        // sort($categories);
         
         DB::beginTransaction();
         try {
             $article        = new Article;
             $article->title = $request->title;
             $article->body  = $request->body;
+            $article->sort  = $request->sort;
             $article->save();
             $article->categories()->sync($categories);
             DB::commit();
@@ -115,6 +117,7 @@ class ArticleController extends Controller
         $request->validate([
             'title'      => 'required|string|min:4',
             'body'       => 'required|string|min:5',
+            'sort'       => 'required|integer|min:-99999|max:99999',
             'categories' => 'required|array',
         ]);
         $article = Article::find($request->route('id'));
@@ -135,12 +138,13 @@ class ArticleController extends Controller
         }
 
         $categories = $request->categories;
-        sort($categories);
+        // sort($categories);
 
         DB::beginTransaction();
         try {
             $article->title = $request->title;
             $article->body  = $request->body;
+            $article->sort  = $request->sort;
             $article->save();
             $article->categories()->sync($categories);
             DB::commit();
