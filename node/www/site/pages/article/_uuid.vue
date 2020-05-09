@@ -1,108 +1,130 @@
 <template>
-  <div style="background-color:#FFFFFF;">
-    <div :style="{ backgroundColor: '#' + article.categories[0].color }">
-      <div class="container">
-        <div class="has-text-centered" style="padding: 40px 0 30px 0;">
-          <div class="is-size-7">
-            <template v-for="(category, index) in article.categories">
-              <span class="tag" :key="index">
-                <a :style="{ color: '#' + category.color }">
-                  <fa :icon="['fas', 'tag']" />
-                  {{ category.name }}
-                </a>
-              </span>
-            </template>
-          </div>
-          <div class="has-text-white is-size-4 margin-top-md">{{ article.title }}</div>
-        </div>
+  <div>
+    <nuxt-link to="/" style="position: absolute;top: 1.5rem;">返回</nuxt-link>
+    <div class="has-text-centered" style="margin-top:3rem">
+      <div class="is-size-7">
+        <template v-for="(category, index) in article.categories">
+          <span class="tag" :key="index">
+            <a :style="{ color: '#' + category.color }">
+              <fa :icon="['fas', 'tag']" />
+              {{ category.name }}
+            </a>
+          </span>
+        </template>
       </div>
+      <div class="is-size-4 margin-top-md">{{ article.title }}</div>
     </div>
-    <div class="container">
+    <div style="margin-top:3rem">
+      <!-- 评论 -->
+      <div class="comment-component">
+        <ul class="comments">
+          <div
+            v-infinite-scroll="loadMore"
+            infinite-scroll-disabled="busy"
+            infinite-scroll-distance="10"
+            infinite-scroll-immediate-check="true"
+          >
+            <li class="comment">
+              <div class="comment-meta">
+                <span class="comment-nickname">Ken</span>
+                <span class="tag">作者</span>
+                <span class="comment-time">&nbsp;&nbsp;{{ article.created_at | prettyCommentTime }}</span>
+                <span class="comment-floor"># 1</span>
+              </div>
+              <div class="comment-content content">
+                <div v-html="article.body"></div>
+              </div>
+            </li>
+            <li class="comment" v-for="(comment, index) in comments" v-bind:key="index">
+              <div class="comment-meta" style="margin-top:0.5rem;">
+                <span class="comment-nickname">{{ comment.is_author ? 'Ken' : comment.nickname }}</span>
+                <span v-if="comment.is_author" class="tag">作者</span>
+                <span class="comment-time">&nbsp;&nbsp;{{ comment.created_at | prettyCommentTime }}</span>
 
-      <div class="white-block margin-top-lg">
-        <!-- 评论 -->
-        <div class="comment-component">
-          <ul class="comments">
-            <div
-              v-infinite-scroll="loadMore"
-              infinite-scroll-disabled="busy"
-              infinite-scroll-distance="10"
-              infinite-scroll-immediate-check=true
-            >
-              <li class="comment">
-                <div class="comment-meta">
-                  <span class="comment-nickname">
-                    <a>Ken</a>
-                  </span>
-                  <span class="tag">作者</span>
-                  <span class="comment-time">&nbsp;&nbsp;{{ article.created_at | prettyCommentTime }}</span>
-                  <span class="comment-floor"># 1</span>
-                </div>
-                <div class="comment-content content">
-                  <div v-html="article.body"></div>
-                </div>
-              </li>
-              <li class="comment" v-for="(comment, index) in comments" v-bind:key="index">
-                <div class="comment-meta" style="margin-top:0.5rem;">
-                  <span class="comment-nickname">
-                    <a>{{ comment.is_author ? 'Ken' : comment.nickname }}</a>
-                  </span>
-                  <span v-if="comment.is_author" class="tag">作者</span>
-                  <span class="comment-time">&nbsp;&nbsp;{{ comment.created_at | prettyCommentTime }}</span>
-                  <span class="comment-floor"># {{ index + 2 }}</span>
-                </div>
-                <div class="comment-content content">
-                  <p v-html="comment.content"></p>
-                </div>
-              </li>
-            </div>
-          </ul>
-
-          <div class="comment-form" style="margin-top:30px;">
-            <div class="field">
-              <label class="label is-large">留言区</label>
-              <div class="control has-icons-left has-icons-right">
-                <input class="input" v-model="nickname" placeholder="昵称（必填，仅用于显示）" />
-                <span class="icon is-small is-left">
-                  <fa :icon="['fas', 'user']" />
+                <span class="comment-floor"># {{ index + 2 }}</span>
+                <span class="comment-floor" style="margin-right:0.5rem">
+                  <a @click="quoteReply(comment)">引用</a>
                 </span>
               </div>
-            </div>
-
-            <div class="field">
-              <div class="control has-icons-left has-icons-right">
-                <input class="input" type="email" v-model="email" placeholder="Email（选填，不公开，仅用于回复通知）" />
-                <span class="icon is-small is-left">
-                  <fa :icon="['fas', 'envelope']" />
-                </span>
+              <div class="comment-content content">
+                <article class="message" v-if="comment.quote">
+                  <div class="message-body">
+                    <div class="comment-meta">
+                      <span class="comment-nickname">
+                        引用 @{{ comment.quote.is_author ? 'Ken' : comment.quote.nickname }}
+                        <span
+                          v-if="comment.quote.is_author"
+                          class="tag is-dark"
+                        >作者</span> 的评论
+                      </span>
+                    </div>
+                    <p v-html="comment.quote.content"></p>
+                  </div>
+                </article>
+                <p v-html="comment.content"></p>
               </div>
+            </li>
+          </div>
+        </ul>
+
+        <div class="comment-form" style="margin-top:30px;">
+          <div class="field">
+            <label class="label is-large">留言区</label>
+            <div class="control has-icons-left has-icons-right">
+              <input class="input" v-model="nickname" placeholder="昵称（仅用于显示）" />
+              <span class="icon is-small is-left">
+                <fa :icon="['fas', 'user']" />
+              </span>
             </div>
+          </div>
 
-            <div class="comment-create">
-              <div class="comment-input-wrapper">
-                <div v-if="quote" class="comment-quote-info">
-                  回复：
-                  <label v-text="quote.user.nickname" />
-                  <i @click="cancelReply" class="iconfont icon-close" />
-                </div>
+          <div class="field">
+            <div class="control has-icons-left has-icons-right">
+              <input class="input" type="email" v-model="email" placeholder="Email（选填，仅用于回复通知）" />
+              <span class="icon is-small is-left">
+                <fa :icon="['fas', 'envelope']" />
+              </span>
+            </div>
+          </div>
 
-                <textarea
-                  ref="commentEditor"
-                  v-model="content"
-                  @keydown.ctrl.enter="ctrlEnterCreate"
-                  @keydown.meta.enter="ctrlEnterCreate"
-                  @input="autoHeight"
-                  class="comment-input"
-                  placeholder="发表你的想法、疑问或建议，我会尽快回复您，并通过邮件通知"
-                ></textarea>
-                <div class="comment-button-wrapper">
-                  <!-- <div class="comment-help" title="Markdown is supported">
-                    <a>
-                      <fa :icon="['fab', 'markdown']" style="color:black" />
-                    </a>
-                  </div> -->
-                  <button @click="create" v-text="btnName" class="button is-light" />
-                </div>
+          <div class="comment-create">
+            <div class="comment-input-wrapper">
+              <div v-if="quoteComment" class="comment-quote-info">
+                <!-- 回复：
+                <label >{{quoteComment.nickname}}</label>
+                <fa :icon="['fas', 'times']" @click="quoteCancel"/>-->
+                <article class="message">
+                  <div class="message-body">
+                    <div class="comment-meta">
+                      <span class="comment-nickname">
+                        引用 @{{ quoteComment.is_author ? 'Ken' : quoteComment.nickname }}
+                        <span
+                          v-if="quoteComment.is_author"
+                          class="tag is-dark"
+                        >作者</span> 的评论
+                      </span>
+                      <fa
+                        :icon="['fas', 'times']"
+                        @click="quoteCancel"
+                        style="position:absolute;right:2rem"
+                      />
+                    </div>
+                    <p v-html="quoteComment.content"></p>
+                  </div>
+                </article>
+              </div>
+
+              <textarea
+                ref="commentEditor"
+                v-model="content"
+                @keydown.ctrl.enter="ctrlEnterCreate"
+                @keydown.meta.enter="ctrlEnterCreate"
+                @input="autoHeight"
+                class="comment-input"
+                placeholder="发表你的想法、疑问或建议"
+              ></textarea>
+              <div class="comment-button-wrapper">
+                <button @click="create" v-text="btnName" class="button is-light" />
               </div>
             </div>
           </div>
@@ -114,7 +136,9 @@
 
 <script>
 // import utils from '~/common/utils'
+
 export default {
+  layout: "blog",
   components: {},
   data() {
     return {
@@ -127,8 +151,9 @@ export default {
       sending: false, // 发送中
       quote: null, // 引用的对象
       comments: [],
-      articleUuid: null,
-      busy: false
+      articleUUID: this.$route.params.uuid,
+      busy: false,
+      quoteComment: null
     };
   },
   // validate({ params }) {
@@ -137,17 +162,17 @@ export default {
   computed: {
     btnName() {
       return this.sending ? "正在评论..." : "评论";
-    },
+    }
   },
-  mounted() {
-    // utils.handleToc(this.$refs.toc)
-    this.articleUuid = this.$route.params.uuid;
-  },
+  // mounted() {
+  //   // utils.handleToc(this.$refs.toc)
+  //   this.articleUUID = this.$route.params.uuid;
+  // },
   async asyncData(context) {
-    const articleUuid = context.params.uuid; // 从动态路由参数中获取帖子id
+    const articleUUID = context.params.uuid; // 从动态路由参数中获取帖子id
     const [articleResult, commentResult] = await Promise.all([
-      context.app.$axios.get(`/api/f1/articles/${articleUuid}`),
-      context.app.$axios.get(`/api/f1/articles/${articleUuid}/comments`, {
+      context.app.$axios.get(`/api/f1/articles/${articleUUID}`),
+      context.app.$axios.get(`/api/f1/articles/${articleUUID}/comments`, {
         params: {
           page: 1
         }
@@ -155,10 +180,16 @@ export default {
     ]);
     return {
       article: articleResult.data,
-      comments: commentResult.data,
+      comments: commentResult.data
     };
   },
   methods: {
+    quoteReply(quoteComment) {
+      this.quoteComment = quoteComment;
+    },
+    quoteCancel() {
+      this.quoteComment = null;
+    },
     async create() {
       if (!this.content) {
         this.$toast.error("请输入评论内容");
@@ -170,14 +201,15 @@ export default {
 
       this.sending = true;
       try {
-        const articleUuid = this.articleUuid;
+        const articleUUID = this.articleUUID;
         const newComment = {
           nickname: this.nickname,
           email: this.email,
-          content: this.content
+          content: this.content,
+          quote_uuid: this.quoteComment ? this.quoteComment.uuid : null
         };
         const res = await this.$axios.post(
-          `/api/f1/articles/${articleUuid}/comments`,
+          `/api/f1/articles/${articleUUID}/comments`,
           newComment
         );
 
@@ -186,7 +218,7 @@ export default {
         this.quote = null;
       } catch (e) {
         this.$toast.error(
-          "评论失败：" + (e.response.data.msg || e.response.status)
+          "评论失败：" + (e.response.data.message || e.response.status)
         );
       } finally {
         this.sending = false;
@@ -201,7 +233,7 @@ export default {
     async loadComment() {
       try {
         const commentResult = await this.$axios.get(
-          `/api/f1/articles/${this.articleUuid}/comments`,
+          `/api/f1/articles/${this.articleUUID}/comments`,
           {
             params: {
               page: this.page + 1
@@ -209,8 +241,8 @@ export default {
           }
         );
 
-        this.comments = this.comments.concat(commentResult.data);
-        if (comment_result.comments.length != 0) {
+        if (commentResult.data.length > 0) {
+          this.comments = this.comments.concat(commentResult.data);
           this.page++;
           this.busy = false;
         } else {
@@ -251,15 +283,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.white-block {
-  background-color: #ffffff;
-  border-radius: 3px;
-  padding: 15px;
-  -webkit-box-shadow: 0 0 15px 0 rgba(114, 114, 114, 0.2);
-  box-shadow: 0 0 15px 0 rgba(114, 114, 114, 0.2);
-}
-
 .tag {
   &:not(:first-child) {
     margin-left: 5px;
@@ -278,6 +301,7 @@ export default {
 
 // Comment
 .comment-component {
+  margin: 0 6rem;
   .comment-form {
     .comment-create {
       border: 1px solid #dbdbdb;
@@ -334,18 +358,19 @@ export default {
         .comment-nickname {
           position: relative;
           font-size: 14px;
+          line-height: 24px;
           font-weight: 800;
           margin-right: 5px;
           cursor: pointer;
-          color: #1abc9c;
           text-decoration: none;
           display: inline-block;
         }
 
         .comment-time {
           font-size: 12px;
+          line-height: 24px;
           color: #999999;
-          line-height: 1;
+          // line-height: 1;
           display: inline-block;
           position: relative;
         }
@@ -353,6 +378,7 @@ export default {
         .comment-floor {
           float: right;
           font-size: 12px;
+          line-height: 24px;
         }
       }
 
@@ -368,6 +394,12 @@ export default {
         // margin-top: -5px;
       }
     }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .comment-component {
+    margin: 0;
   }
 }
 </style>

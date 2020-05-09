@@ -44,6 +44,18 @@ export const constantRoutes = [
   },
 
   {
+    path: '/profile',
+    component: Layout,
+    children: [{
+      path: '/',
+      name: 'Profile',
+      component: () => import('@/views/profile.vue'),
+      meta: { title: '个人中心'}
+    }],
+    hidden: true
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
@@ -79,8 +91,8 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       title: '后台管理',
-      icon: 'table',
-      roles: ['admin']
+      icon: 'admin-setting',
+      roles: ['admin', 'guest']
     },
     children: [{
         path: 'user',
@@ -88,8 +100,8 @@ export const asyncRoutes = [
         component: () => import('@/views/admin/index.vue'),
         meta: {
           title: '后台用户管理',
-          icon: 'table',
-          roles: ['admin']
+          icon: 'user',
+          roles: ['admin', 'guest']
         }
       },{
         path: 'role',
@@ -97,8 +109,8 @@ export const asyncRoutes = [
         component: () => import('@/views/role/index.vue'),
         meta: {
           title: '角色管理',
-          icon: 'table',
-          roles: ['admin']
+          icon: 'role',
+          roles: ['admin', 'guest']
         }
       },{
         path: 'access',
@@ -106,8 +118,8 @@ export const asyncRoutes = [
         component: () => import('@/views/access/index.vue'),
         meta: {
           title: '路由规则',
-          icon: 'table',
-          roles: ['admin']
+          icon: 'access',
+          roles: ['admin', 'guest']
         }
       }
     ]
@@ -117,8 +129,8 @@ export const asyncRoutes = [
     component: Layout,
     meta: {
       title: '文章管理',
-      icon: 'table',
-      roles: ['admin']
+      icon: 'article',
+      roles: ['admin', 'guest']
     },
     children: [{
       path: 'category',
@@ -126,8 +138,8 @@ export const asyncRoutes = [
       component: () => import('@/views/article/category'),
       meta: {
         title: '文章分类',
-        icon: 'table',
-        roles: ['admin']
+        icon: 'category',
+        roles: ['admin', 'guest']
       }
     }, {
       path: 'article',
@@ -135,8 +147,17 @@ export const asyncRoutes = [
       component: () => import('@/views/article/index'),
       meta: {
         title: '文章管理',
-        icon: 'table',
-        roles: ['admin']
+        icon: 'article',
+        roles: ['admin', 'guest']
+      }
+    }, {
+      path: 'comment',
+      name: 'Comment',
+      component: () => import('@/views/article/comment'),
+      meta: {
+        title: '评论管理',
+        icon: 'comment',
+        roles: ['admin', 'guest']
       }
     }]
   },

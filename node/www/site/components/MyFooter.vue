@@ -12,7 +12,7 @@
   </footer>
 </template>
 
-<style>
+<style scoped>
 .footer {
   padding: 3rem 1.5rem 3rem;
 }

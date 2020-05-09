@@ -5,7 +5,6 @@
       style="width: 100%;margin-top:30px;"
       v-loading="loading"
       border
-      stripe
       row-key="id"
       :data="accessList"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"

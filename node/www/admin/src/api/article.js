@@ -75,3 +75,27 @@ export function addImage(data) {
     data
   })
 }
+
+// comment
+export function getComments(query) {
+  return request({
+    url: 'b1/comments',
+    method: 'get',
+    params: query
+  })
+}
+
+export function addComment(data) {
+  return request({
+    url: `b1/comments`,
+    method: 'post',
+    data
+  })
+}
+
+export function deleteComment(id) {
+  return request({
+    url: `b1/comments/${id}`,
+    method: 'delete'
+  })
+}

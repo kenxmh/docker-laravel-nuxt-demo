@@ -5,7 +5,8 @@ import { resetRouter } from '@/router'
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: '',
+    username: '',
+    realname: '',
     avatar: '',
     roles: []
   }
@@ -20,8 +21,11 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, name) => {
-    state.name = name
+  SET_USERNAME: (state, username) => {
+    state.username = username
+  },
+  SET_REALNAME: (state, realname) => {
+    state.realname = realname
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -39,6 +43,7 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         commit('SET_TOKEN', response.access_token)
         setToken(response.access_token)
+        
         resolve()
       }).catch(error => {
         console.log(error)
@@ -50,22 +55,19 @@ const actions = {
   setToken({ commit }, token) {
     token = token || ''
     commit('SET_TOKEN', token)
-    setToken(token)
+  },
+
+  setProfile({ commit }, realname) {
+    commit('SET_REALNAME', realname)
   },
 
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        // const { data } = response
-
-        // if (!data) {
-        //   reject('Verification failed, please Login again.')
-        // }
-
-        // const { name, avatar } = data
-
-        commit('SET_NAME', response.realname)
+        
+        commit('SET_USERNAME', response.username)
+        commit('SET_REALNAME', response.realname)
         commit('SET_AVATAR', 'default')
         commit('SET_ROLES', response.roles)
         resolve(response)

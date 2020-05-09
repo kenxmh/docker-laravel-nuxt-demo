@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken, setToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
@@ -48,7 +48,7 @@ service.interceptors.response.use(
     if (token) {
       // 如果 header 中存在 token，那么触发 refreshToken 方法，替换本地的 token
       token = token.replace('Bearer ', '')
-      // store.dispatch('SET_TOKEN', token)
+      setToken(token)
       store.dispatch('user/setToken', token)
     }
 

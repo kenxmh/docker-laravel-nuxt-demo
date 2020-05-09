@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Article;
-use App\Models\Category;
+use App\Models\Common\Article;
+use App\Models\Common\Category;
 use Illuminate\Database\Seeder;
 
 class ArticleSystemTableSeeder extends Seeder
@@ -18,10 +18,11 @@ class ArticleSystemTableSeeder extends Seeder
         $faker = \Faker\Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
+            $key = $faker->colorName;
             Category::create([
-                'name'  => $faker->word,
-                'key'   => $faker->word,
-                'color' => '4a4a4a'
+                'name'  => $key,
+                'key'   => $key,
+                'color' => mb_substr($faker->hexcolor, 1),
             ]);
         }
 
@@ -29,7 +30,7 @@ class ArticleSystemTableSeeder extends Seeder
         for ($i = 1; $i <= 100; $i++) {
             Article::create([
                 'title' => $faker->sentence(),
-                'body'  => $faker->paragraphs(5, true) ,
+                'body'  => $faker->paragraphs(5, true),
             ]);
 
             // 关联的类别数

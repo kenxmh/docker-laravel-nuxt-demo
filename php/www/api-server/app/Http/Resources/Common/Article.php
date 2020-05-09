@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Common;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Parsedown;
@@ -19,7 +19,7 @@ class Article extends JsonResource
         $parsedown = new Parsedown();
         $parsedown->setBreaksEnabled(true);
         return [
-            'uuid'       => Hashids::encode(2, $this->id),
+            'uuid'       => Hashids::encode(env('UUID_TYPE_ARTICLE'), $this->id),
             'title'      => $this->title,
             'body'       => $parsedown->text($this->body),
             'views'      => $this->views,
@@ -27,7 +27,7 @@ class Article extends JsonResource
             'sort'       => $this->sort,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
-            'categories' => \App\Http\Resources\Category::collection($this->categories),
+            'categories' => \App\Http\Resources\Common\Category::collection($this->categories),
         ];
     }
 }

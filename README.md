@@ -37,25 +37,33 @@ docker-compose up -d
 
 ### 第二步：配置 Laravel
 
-#### 1、composer install
-
-#### 2、配置 .env
+#### 1、配置 .env
 * 创建一个数据库
 * 修改数据库名，数据库用户，数据库密码
-* 生成项目app key：`php artisan key:generate`
-* 生成jwt key：`php artisan jwt:secret`
 
-#### 3、创建数据库，导入数据库
+#### 2、进入容器 `docker exec -it php /bin/bash`
+#### 3、在容器内安装依赖 `composer install`
+#### 4、在容器内执行命令
 ```
+// 生成项目app key
+php artisan key:generate
+
+// 生成jwt key
+php artisan jwt:secret
+
+// 导入数据表
 php artisan migrate
+
+// 导入数据
 php artisan db:seed
 ```
 
-#### 4、配置nginx conf
+#### 5、配置nginx conf
 
 ### 第三步：配置 Element-Admin
 
-#### 安装依赖
+#### 1、进入容器 `docker exec -it node sh`
+#### 2、在容器安装依赖
 ```
 npm config set registry https://registry.npm.taobao.org
 npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
@@ -71,7 +79,8 @@ npm run build:prod
 
 ### 第四步：配置 Nuxt
 
-#### 安装依赖
+#### 1、进入容器 `docker exec -it node sh`
+#### 2、在容器安装依赖
 ```
 npm config set registry https://registry.npm.taobao.org
 npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/

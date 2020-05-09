@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
-use App\Models\Article;
-use App\Models\Comment;
+use App\Models\Common\Article;
+use App\Models\Common\ArticleComment;
+use App\Services\HashService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Vinkla\Hashids\Facades\Hashids;
 
-class CommentController extends Controller
+class ArticleCommentController extends Controller
 {
     /**
-     * @group Common-Comment
+     * @group Common-ArticleComment
      * 文章评论-列表
      *
      * @urlParam uuid string required 文章的uuid
@@ -24,7 +24,8 @@ class CommentController extends Controller
     {
         $page = $request->page ?? 1;
 
-        $article = Article::where('id', Hashids::decode($request->uuid))->first();
+        $id      = HashService::getObjectId($request->uuid);
+        $article = Article::where('id', $id)->first();
         if (empty($article->id)) {
             return response()->json([
                 'error_code' => 1,
@@ -32,13 +33,13 @@ class CommentController extends Controller
             ], 404);
         }
 
-        $list = Comment::where('article_id', $article->id)
+        $list = ArticleComment::with('quote:id,nickname,is_author,content,created_at')->where('article_id', $article->id)
             ->paginate(10, ['*'], 'page', $page);
         // ->offset(10*($page-1))
         // ->limit(10)
         // ->get();
         $list->withPath('');
-        return \App\Http\Resources\Comment::collection($list);
+        return \App\Http\Resources\Common\ArticleComments::collection($list);
     }
 
     /**
@@ -64,12 +65,14 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nickname' => 'required|string|min:3',
-            'email'    => 'nullable|email|min:5',
-            'content'  => 'required|string|min:5',
+            'nickname'   => 'required|string|min:3',
+            'email'      => 'nullable|email|min:5',
+            'content'    => 'required|string|min:5',
+            'quote_uuid' => 'nullable|string|min:4',
         ]);
 
-        $article = Article::where('id', Hashids::decode($request->uuid))->first();
+        $id      = HashService::getObjectId($request->uuid);
+        $article = Article::where('id', $id)->first();
         if (empty($article->id)) {
             return response()->json([
                 'error_code' => 1,
@@ -77,10 +80,21 @@ class CommentController extends Controller
             ], 404);
         }
 
+        if ($request->quote_uuid) {
+            $commentId      = HashService::getObjectId($request->quote_uuid);
+            $articleComment = ArticleComment::where('id', $commentId)->where('is_show', 1)->first();
+            if (empty($articleComment->id)) {
+                return response()->json([
+                    'error_code' => 2,
+                    'message'    => '数据不存在',
+                ], 404);
+            }
+        }
         DB::beginTransaction();
         try {
-            $comment             = new Comment;
+            $comment             = new ArticleComment;
             $comment->article_id = $article->id;
+            $comment->quote_id   = $articleComment->id ?? 0;
             $comment->nickname   = $request->nickname;
             if (!empty($request->email)) {
                 $article->email = $request->email;
@@ -95,13 +109,13 @@ class CommentController extends Controller
         } catch (QueryException $e) {
             DB::rollBack();
             return response()->json([
-                'error_code' => 2,
+                'error_code' => 3,
                 'message'    => '未知错误，操作失败',
             ], 400);
         }
 
         $comment->refresh();
-        return new \App\Http\Resources\Comment($comment);
+        return new \App\Http\Resources\Common\ArticleComments($comment);
     }
 
     /**

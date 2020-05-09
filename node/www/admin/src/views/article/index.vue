@@ -167,7 +167,7 @@ export default {
   methods: {
     async getArticles() {
       this.loading = true;
-      this.articleList = await getArticles();
+      this.articleList = await getArticles(this.query);
       this.categoryList = await getCategories();
       this.loading = false;
     },

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
-use App\Models\Article;
-use App\Models\Category;
+use App\Models\Common\Article;
+use App\Models\Common\Category;
 use App\Services\HashService;
 use Illuminate\Http\Request;
 // use Redis; 会导致命名空间重复，集成的Redis 和 predis
@@ -50,7 +50,7 @@ class ArticleController extends Controller
             $list->withPath('');
         }
 
-        return \App\Http\Resources\Article::collection($list);
+        return \App\Http\Resources\Common\Article::collection($list);
     }
 
     /**
@@ -96,7 +96,7 @@ class ArticleController extends Controller
         $article->save();
         $result = Article::with(['categories'])->where('id', $article->id)->first();
 
-        return new \App\Http\Resources\Article($result);
+        return new \App\Http\Resources\Common\Article($result);
     }
 
     /**

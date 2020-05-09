@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 // use App\Http\Requests\ArticleRule;
 use App\Http\Controllers\Controller;
-use App\Models\Article;
+use App\Models\Common\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
