@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getWaitingVideos() {
+export function getStats() {
   return request({
-    url: 'b1/videos',
+    url: 'b1/stats',
     method: 'get'
   })
 }

@@ -49,6 +49,17 @@ class CreateAdminSystemTable extends Migration
             $table->integer('role_id')->unsigned()->index();
             $table->integer('access_id')->unsigned()->index();
         });
+
+        Schema::create('admin_operation_log', function (Blueprint $table) {
+            $table->increments('id')->unsigned();
+            $table->integer('admin_id')->unsigned()->index();
+            $table->string('method', 7);
+            $table->string('description', 32);
+            $table->string('path', 64);
+            $table->string('raw_data');
+            $table->string('ip', 16);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -63,5 +74,6 @@ class CreateAdminSystemTable extends Migration
         Schema::dropIfExists('admin_access');
         Schema::dropIfExists('admin_user_role');
         Schema::dropIfExists('admin_role_access');
+        Schema::dropIfExists('admin_operation_log');
     }
 }

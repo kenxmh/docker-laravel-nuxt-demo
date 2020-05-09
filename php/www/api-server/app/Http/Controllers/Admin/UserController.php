@@ -7,64 +7,10 @@ use App\Models\Admin\Role;
 use App\Models\Admin\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    /**
-     * @group Admin-User
-     * 后台用户-登录
-     * @bodyParam username string required 用户名 Example: admin
-     * @bodyParam password string required 密码 Example: 123456
-     * @return \Illuminate\Http\Response
-     */
-    public function login(Request $request)
-    {
-        $credentials = $request->only('username', 'password');
-
-        if (!$token = auth()->guard('admin')->attempt($credentials)) {
-            return response()->json([
-                'error_code' => 1,
-                'message'    => '用户名或密码不正确',
-            ], 403);
-        }
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => auth()->factory()->getTTL() * 60,
-        ], 201);
-    }
-
-    /**
-     * @group Admin-User
-     * 后台用户-获取当前用户
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function user()
-    {
-        $user          = auth()->guard('admin')->user()->toArray();
-        $user['roles'] = Role::leftJoin('admin_user_role', 'admin_role.id', '=', 'admin_user_role.role_id')
-            ->where(['admin_user_role.admin_id' => $user['id']])
-            ->pluck('admin_role.name');
-        return response()->json($user);
-    }
-
-    /**
-     * @group Admin-User
-     * 后台用户-登出当前用户
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function logout()
-    {
-        auth()->guard('admin')->logout();
-
-        return response()->json([], 201);
-    }
-
     /**
      * @group Admin-User
      * 后台用户-列表
@@ -163,7 +109,7 @@ class UserController extends Controller
     {
         $request->validate([
             'realname' => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255'
+            'email'    => 'required|string|email|max:255',
         ]);
         $user = User::find($request->route('id'));
         if (empty($user->id)) {

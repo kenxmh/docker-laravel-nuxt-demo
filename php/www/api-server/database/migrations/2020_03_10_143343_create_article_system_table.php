@@ -41,12 +41,13 @@ class CreateArticleSystemTable extends Migration
         Schema::create('article_comment', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->integer('article_id')->unsigned()->index();
+            $table->integer('quote_id')->unsigned()->default(0)->index();
             $table->integer('is_author')->default(0);
             $table->string('nickname', 32);
             $table->string('email', 32)->default('');
-            $table->string('ip', 20)->default('');
+            $table->string('ip', 16)->default('');
             $table->text('content');
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('is_show')->default(1);
             $table->timestamps();
         });
     }

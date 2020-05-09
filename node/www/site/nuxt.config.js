@@ -1,6 +1,10 @@
 
 export default {
   mode: 'universal',
+  env: {
+    BAIDU_ANALYTICS_KEY: '',
+    GOOGLE_ANALYTICS_KEY: '',
+  },
   server: {
     port: 3000, // default: 3000
     host: '0.0.0.0' // default: localhost,
@@ -42,6 +46,8 @@ export default {
     '~/plugins/kenbucket',
     { src: '~/plugins/infinite-scroll', ssr: false },
     { src: '~/plugins/lazyload', ssr: false },
+    { src: '~/plugins/ga-baidu', ssr: false },
+    { src: '~/plugins/ga-google', ssr: false },
   ],
   /*
   ** Nuxt.js dev-modules

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Common;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +10,6 @@ class Category extends Model
 
     public function articles()
     {
-        return $this->belongsToMany('App\Models\Article', 'article_category', 'category_id', 'article_id');
+        return $this->belongsToMany('App\Models\Common\Article', 'article_category', 'category_id', 'article_id');
     }
 }

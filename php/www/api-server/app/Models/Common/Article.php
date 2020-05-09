@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Common;
 
 use Illuminate\Database\Eloquent\Model;
 use Vinkla\Hashids\Facades\Hashids;
@@ -34,24 +34,8 @@ class Article extends Model
 
     public function categories()
     {
-        return $this->belongsToMany('App\Models\Category', 'article_category', 'article_id', 'category_id');
+        return $this->belongsToMany('App\Models\Common\Category', 'article_category', 'article_id', 'category_id');
     }
-
-    // public function appendUUID()
-    // {
-    //     $this->uuid = Hashids::encode(config('constant.UUID_TYPE_ARTICLE'), $this->id);
-    //     $this->save();
-    // }
-
-    // public function getUUID()
-    // {
-    //     return Hashids::encode(config('constant.UUID_TYPE_ARTICLE'), $this->id);
-    // }
-
-    // public function getImageUUID()
-    // {
-    //     return Hashids::encode(config('constant.UUID_TYPE_ARTICLE_IMAGE'), $this->id);
-    // }
 
 
 }

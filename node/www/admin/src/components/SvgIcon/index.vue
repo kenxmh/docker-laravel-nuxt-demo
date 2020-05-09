@@ -50,6 +50,9 @@ export default {
   width: 1em;
   height: 1em;
   vertical-align: -0.15em;
+  /* width: 16px;
+  height: 16px;
+  vertical-align: -3.5px; */
   fill: currentColor;
   overflow: hidden;
 }

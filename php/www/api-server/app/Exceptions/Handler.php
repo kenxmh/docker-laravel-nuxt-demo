@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
                 "error_code" => 405,
                 "message"    => 'Method Not Allowed',
             ], 405);
-        } else if ($request->is("v1/*") && $exception instanceof ValidationException) {
+        } else if ($request->is("api/*") && $exception instanceof ValidationException) {
             return response()->json([
                 "error_code" => 406,
                 "message"    => array_values($exception->errors())[0][0],
