@@ -148,11 +148,11 @@ export default {
     },
     changeQuery(key, value) {
       this.query[key] = value;
-      var queryString = "";
-      for (let row in this.$route.query) {
-        if (row !== key) queryString += `&${row}=${this.query[row]}`;
-      }
-      this.$router.replace(`?${queryString}&${key}=${value}`);
+      // var queryString = "";
+      // for (let row in this.$route.query) {
+      //   if (row !== key) queryString += `&${row}=${this.query[row]}`;
+      // }
+      // this.$router.replace(`?${queryString}&${key}=${value}`);
     },
     async reloadArticleList() {
       try {
