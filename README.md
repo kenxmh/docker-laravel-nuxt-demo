@@ -6,7 +6,7 @@
 
 ## 简介：
 * 前端
-nuxt + buefy 的简单博客
+nuxt + buefy 的简单博客 ，配置好了百度统计和Google Analytics
 * api
 Laravel 5.8 + JWT
 * admin
@@ -56,9 +56,23 @@ php artisan migrate
 
 // 导入数据
 php artisan db:seed
+
+// 自动加载器改进
+composer install --optimize-autoloader --no-dev
+
+// 配置加载到缓存
+php artisan config:cache
+// php artisan config:clear
+
+// 路由加载到缓存
+php artisan route:cache
+// php artisan route:clear
+
 ```
 
-#### 5、配置nginx conf
+#### 5、修改storage目录权限
+
+#### 6、配置nginx conf
 
 ### 第三步：配置 Element-Admin
 
@@ -87,16 +101,24 @@ npm i node-sass --sass_binary_site=https://npm.taobao.org/mirrors/node-sass/
 npm rebuild node-sass
 npm install
 
-// 开发
+// 开发环境
 npm run dev
-
-// 编译
-npm run build
-
-
 ```
 
-#### 3、部署
+#### 3、(可跳过) 在nuxt.config.js 配置百度统计和Google Analytics
+```
+env: {
+    BAIDU_ANALYTICS_KEY: '',
+    // 格式为 'UA-XXXXXXXXXX'
+    GOOGLE_ANALYTICS_KEY: '',
+},
+```
+
+#### 4、编译和部署
+
+// 先编译
+npm run build
+
 方法一：正常部署
 
 ```
@@ -107,7 +129,7 @@ npm run start
 
 ```
 npm install -g pm2
-pm2 start start.js
+pm2 start npm --name "blog" -- run start
 ```
 
 注：PM2 相关命令
@@ -126,5 +148,5 @@ pm2 delete 0 # 删除 id为 0的指定应用程序
 
 pm2 logs 0 # 控制台显示编号为0的日志
 pm2 show 0  # 查看执行编号为0的进程
-pm2 monit my-nuxt # 监控名称为my-nuxt的进程
+pm2 monit blog # 监控名称为blog的进程
 ```
