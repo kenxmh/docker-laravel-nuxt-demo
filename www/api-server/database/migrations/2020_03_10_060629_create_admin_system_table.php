@@ -56,7 +56,7 @@ class CreateAdminSystemTable extends Migration
             $table->string('method', 7);
             $table->string('description', 32);
             $table->string('path', 64);
-            $table->string('raw_data');
+            $table->text('raw_data');
             $table->string('ip', 16);
             $table->timestamps();
         });
