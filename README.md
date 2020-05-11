@@ -1,8 +1,8 @@
 # docker-laravel-nuxt
 
->这只是一个前后端分离的尝试，运行于docker环境
+>这只是一个前后端分离的尝试，主要是测试下nuxt，运行于docker环境
 >前端使用nuxt，laravel只做api提供数据，后台管理使用element-admin
->该项目是以一个简单的blog为例
+>该项目是以一个简单的blog为例, 关于nuxt的配置问题和部署问题都有示例
 
 ## 简介：
 * 前端
